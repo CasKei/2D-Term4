@@ -14,15 +14,19 @@ Xc3 b cin co3 nand2
 Xc4 co1 co2 co3 co nand3
 .ends
 
+* make and with nand and inv
+.subckt and a b z
+Xzinv a b zinv nand2
+Xz zinv z inverter
+.ends
 
 
 * Single carry generate and carry propagate
-* G_i = A_i * B_i --> do this with (nand + inv)
+* G_i = A_i * B_i
 * P_i = A_i xor B_i
 .subckt PG a b g p
 Xp a b p xor2
-Xg_inv a b ginv nand2
-Xg ginv g inverter
+Xg a b g and
 .ends
 
 
