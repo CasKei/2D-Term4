@@ -1,8 +1,8 @@
-# 2D-50.002
+# 2D-Term4
 
 ---
 
-# Part1
+# 50.002 Part1
 
 ## Problem
 
@@ -143,7 +143,7 @@ aight.
 
 ---
 
-# Part2
+# 50.002 Part2
 
 1. Select one output bit `> 8`
 2. From gate netlist, derive the Boolean expression in CNF
