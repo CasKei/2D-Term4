@@ -26,75 +26,20 @@ $$O(\sqrt{n})$$
 Where top 16bits driven by Cout of the bottom 16bits.
 
 Can split more and form some massive tree to make it $O(\log{n})$.
+But we can do better.
 
-## Carry lookahead
+## G and P
 
-Recall a FA:
+Some geniuses saw something about the carry.\
+Even if you don't know what a column's carry-in will be yet, you could make some assumptions about what will happen:
 
-```
-**** FA circuit ******************
-.subckt FA a b cin s co
-Xs1 a b s1 xor2
-Xs2 s1 cin s xor2
-Xc1 a b co1 nand2
-Xc2 a cin co2 nand2
-Xc3 b cin co3 nand2
-Xc4 co1 co2 co3 co nand3
-.ends
-**********************************
-```
+| `A` | `B` | `Cout` |
+| --- | --- | ------ |
+| `0` | `0` | `0`    |
+| `0` | `1` | `Cin`  |
+| `1` | `0` | `Cin`  |
+| `1` | `1` | `1`    |
 
-Each FA needs to take in the lower-order Cin.\
-We can mitigate this with replacing Cin by alternative information that can be used to deduce higher-order Cins, hence eliminating Cout signals.
-
-Generate this alternate information with only the inputs at that bit position, and not outputs computed from other bit positions.
-
-This works with info from adjacent sequences of bit positions and can be aggregated to characterise the carry behaviour of their concatenation.
-
-$$
-S = A \oplus B \oplus C_{in}\\
-C_{out} =  (A + B)\cdot C_{in}+ A \cdot B
-$$
-
-See $C_{out}$:\
-We choose these 2 signals:
-
-> **_Carry generate_**: $G_i = A_i \cdot B_i$ 1 if carry is 1.\
-> **_Carry propagate_**: $P_i = (A_i \oplus B_i)$ 1 if carry = Cin.
-
-If neither is asserted, carry is 0 independently of Cin.
-
-Hence
-$$C_{i+1} = P_i \cdot C_i + G_i$$
-
-$$
-S = P \oplus C_{in}
-$$
-
-### OK lezgo 1 bit
-
-Inputs: a, b, cin\
-Outputs: g, p, s\
-g = ab = (a nand b) inv \
-p = a xor b
-
-```
-.subckt and a b z
-Xzinv a b zinv nand2
-Xz zinv z inverter
-.ends
-```
-
-```
-.subckt PG a b g p
-Xp a b p xor
-Xg a b g and
-.ends
-```
-
-```
-.subckt CLA1 a b cin g p s
-Xs2 cin p s xor
-Xgp a b g p PG
-.ends
-```
+- **_Kill_**: if both inputs are `0`, carry is sure `0`
+- **_Generated_**: if both inputs are `1`, carry is sure `1`
+- **_Propagated_**: if only one input is `1`, carry out is `1` iff carry in is `1`
