@@ -71,8 +71,20 @@ $$
 S = P \oplus C_{in}
 $$
 
-### OK lezgo 2bit
+### OK lezgo 1 bit
 
-$$
-C_{i+1}
-$$
+Inputs: a, b, cin\
+Outputs: g, p, s\
+g = ab = (a nand b) inv \
+p = a xor b
+
+```
+.subckt CLA1 a b cin g p s
+Xs1 a b p xor2
+Xs2 cin p s xor2
+Xg_inv a b ginv nand2
+Xg ginv g inverter
+.ends
+```
+
+### 2 bit
