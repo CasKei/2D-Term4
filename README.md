@@ -141,8 +141,6 @@ Sn = Pn ⊕ C_{n-1}
 
 aight.
 
-![16bit KS adder]("/../Attachments/16-bit_KSA.jpg")
-
 <img src="/Attachments/16-bit_KSA.jpg"
      alt="16bit KS adder"
      style="float: left; margin-right: 10px;" />
