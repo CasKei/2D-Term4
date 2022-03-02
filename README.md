@@ -49,7 +49,7 @@ We can mitigate this with replacing Cin by alternative information that can be u
 
 Generate this alternate information with only the inputs at that bit position, and not outputs computed from other bit positions.
 
-This works with info from adjacent sequences ofbit positions and can be aggregated to characterise the carry behaviour of their concatenation.
+This works with info from adjacent sequences of bit positions and can be aggregated to characterise the carry behaviour of their concatenation.
 
 $$
 S = A \oplus B \oplus C_{in}\\
