@@ -55,8 +55,11 @@ Xgp a b g p PG
 
 * this is for KSA, do refer to that diagram from the wikipedia page
 * this one is for the yellow ones
-.subckt bGP pi gi piprev giprev pout gout
-Xpo pi piprev pout and
-Xgo1 pi giprev pandg and
-Xgo2 pandg gi or
+.subckt CLPG ph gh pl gl pout gout
+Xpo ph pl pout and
+Xgo1 ph gl phgl and
+Xgo2 phgl gh or
 .ends
+
+
+
