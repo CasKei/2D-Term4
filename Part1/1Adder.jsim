@@ -1,7 +1,8 @@
 .include "nominal.jsim"
 .include "stdcell.jsim"
-* .include "2dcheckoff_100ns.jsim"
-.include "lab2checkoff.jsim"
+.include "2dcheckoff_4ns.jsim"
+*.include "lab2checkoff.jsim"
+*.include "lab3_testadder.jsim"
 
 * basic FA
 * S = A xor B xor Cin
@@ -41,9 +42,13 @@ Xinv c z inverter
 
 * G_i = A_i * B_i
 * P_i = A_i xor B_i
-.subckt PG a b g p
-Xp a b p xor
-Xg a b g and
+
+*UPDATE: upgraded PG to take in ALUFN0 input for subtraction
+
+.subckt PG a b ALUFN0 g p
+Xsubcheck b ALUFN0 b2 xor
+Xp a b2 p xor
+Xg a b2 g and
 .ends
 
 
@@ -93,15 +98,15 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 
 * Trying for 32-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
-.subckt adder4 ALUFN[0] a[31:0] b[31:0] s[31:0] z v n
+.subckt adder32 ALUFN[0] a[31:0] b[31:0] s[31:0] z v n
 
 * all the PGs
-XPG a[31:0] b[31:0] g[31:0] p[31:0] PG
+XPG a[31:0] b[31:0] ALUFN[0]#32 g0[31:0] p0[31:0] PG
 
 
 * first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
-XKSPG1 p[31:1] g[31:1] p[30:0] g[30:0] p1[31:1] g1[31:1] KSPG
-XKSG1_0 p0 g0 ALUFN[0] c0 KSG
+XKSPG1 p0[31:1] g0[31:1] p0[30:0] g0[30:0] p1[31:1] g1[31:1] KSPG
+XKSG1_0 p00 g00 ALUFN[0] c0 KSG
 
 
 * second layer: bit 3 has KSPG, bits 1 to 2 has KSG
@@ -125,7 +130,7 @@ XKSG4_0 p37 g37 ALUFN[0] c7 KSG
 * fifth layer:
 XKSPG5 p431 g431 p423 g423 p531 g531 KSPG
 XKSG5 p4[30:16] g4[30:16] c[14:0] c[30:16] KSG
-XKSG5_0 p47 g47 ALUFN[0] c15 KSG
+XKSG5_0 p415 g415 ALUFN[0] c15 KSG
 
 
 * sixth layer: 
@@ -134,7 +139,29 @@ XKSG6_0 p531 g531 ALUFN[0] cout KSG
 
 
 * all the KSS to calculate the sum bits. Last layer.
-Xsum0 p0 ALUFN[0] s0 KSS 
-Xsum1to31 p[31:1] c[30:0] s[31:1] KSS
+Xsum0 p00 ALUFN[0] s0 KSS 
+Xsum1to31 p0[31:1] c[30:0] s[31:1] KSS
 
+*calculate z
+X16ors s[31:16] s[15:0] out8[15:0] nor2
+X8ors out8[15:8] out8[7:0] out4[7:0] nand2
+X4ors out4[7:4] out4[3:0] out2[3:0] nor2
+X2ors out2[3:2] out2[1:0] out[1:0] nand2
+Xorf out1 out0 z nor2
+*not all correct yet, this is work in progess, will update soon
+
+*calculate v
+XB_ALUFN0 ALUFN[0] b31 xb31 xor
+Xnots31 s31 nots31 inverter
+Xnotxb31 xb31 notxb31 inverter
+Xnota31 a31 nota31 inverter
+Xnegnegpos a31 xb31 nots31 negnegpos and3
+Xposposneg nota31 notxb31 s31 posposneg and3
+Xv_unit posposneg negnegpos v or2
+
+*calculate n
+Xbuff s31 n buffer
 .ends
+
+
+
