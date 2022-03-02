@@ -40,7 +40,7 @@ Xinv c z inverter
 
 * G_i = A_i * B_i
 * P_i = A_i xor B_i
-.subckt KSPG a b g p
+.subckt PG a b g p
 Xp a b p xor
 Xg a b g and
 .ends
