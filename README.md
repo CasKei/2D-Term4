@@ -25,11 +25,11 @@ Do 2 additions:
 
 Then use MUX to select when the Cin is known
 
-`O(\sqrt{n})`
+`O(√n)`
 
 Where top 16bits driven by Cout of the bottom 16bits.
 
-Can split more and form some massive tree to make it $O(\log{n})$.
+Can split more and form some massive tree to make it `O(log n)`.
 But we can do better.
 
 ## G and P
