@@ -9,6 +9,11 @@ To optimise this, there are many possible designs.
 
 ## Carry select
 
+If we split and try to do parallel: say split 32 bit to 2 16bit adders,
+
+**Problem**: the carry input to the top 16bits is unknow until the bottom 16bits adder has completed its operation.
+
+**Solution**:
 Do 2 additions:
 
 - Assume Cin = 0
@@ -20,7 +25,7 @@ $$O(\sqrt{n})$$
 
 Where top 16bits driven by Cout of the bottom 16bits.
 
-**Problem**: the carry input to the top 16bits is unknow until the bottom 16bits adder has completed its operation.
+Can split more and form some massive tree to make it $O(\log{n})$.
 
 ## Carry lookahead
 
@@ -39,27 +44,30 @@ Xc4 co1 co2 co3 co nand3
 **********************************
 ```
 
-This works with
+Each FA needs to take in the lower-order Cin.\
+We can mitigate this with replacing Cin by alternative information that can be used to deduce higher-order Cins, hence eliminating Cout signals.
+
+Generate this alternate information with only the inputs at that bit position, and not outputs computed from other bit positions.
+
+This works with info from adjacent sequences ofbit positions and can be aggregated to characterise the carry behaviour of their concatenation.
 
 $$
 S = A \oplus B \oplus C_{in}\\
 C_{out} =  (A + B)\cdot C_{in}+ A \cdot B
 $$
 
-See $C_{out}$:
+See $C_{out}$:\
+We choose these 2 signals:
 
-$$
+> **_Carry generate_**: $G_i = A_i \cdot B_i$ 1 if carry is 1.\
+> **_Carry propagate_**: $P_i = (A_i + B_i)$ 1 if carry = Cin.
 
-C_{i+1} = (A_i + B_i)C_{in} + A_i\cdot B_i = P_i \cdot C_i + G_i\\
+If neither is asserted, carry is 0 independently of Cin.
 
+Hence
+$$C_{i+1} = P_i \cdot C_i + G_i$$
 
-$$
-
-> **_Carry generate_**: $G_i = A_i \cdot B_i$ is true if a carry is generated.
-
-> **_Carry propagate_**: $P_i = (A_i + B_i)$ is true if the carry is propagated by FA from $C_{in}$ to $C_{out}$.
-
-==NOTE== sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
+NOTE: sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
 
 $$
 S = P \oplus C_{in}
