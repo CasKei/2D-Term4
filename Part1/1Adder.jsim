@@ -87,36 +87,54 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 .ends
 
 
+
+
 *Hello, this file should be up to date.
 
 * Trying for 32-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
-.subckt adder4 a[3:0] b[3:0] s[4:0]
+.subckt adder4 ALUFN[0] a[31:0] b[31:0] s[31:0] z v n
 
 * all the PGs
-XPG a[3:0] b[3:0] g[3:0] p[3:0] PG
+XPG a[31:0] b[31:0] g[31:0] p[31:0] PG
 
 
 * first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
-XKSPG1 p[3:1] g[3:1] p[2:0] g[2:0] p1[3:1] g1[3:1] KSPG
-
-* the 0 is because carry in is assumed to be 0
-XKSG1 p0 g0 0 c0 KSG
+XKSPG1 p[31:1] g[31:1] p[30:0] g[30:0] p1[31:1] g1[31:1] KSPG
+XKSG1_0 p0 g0 ALUFN[0] c0 KSG
 
 
 * second layer: bit 3 has KSPG, bits 1 to 2 has KSG
-* Nothing for bit0
-XKSPG2 p13 g13 p11 g11 p23 g23 KSPG
+XKSPG2 p1[31:3] g1[31:3] p1[29:1] g1[29:1] p2[31:3] g2[31:3] KSPG
 XKSG2 p12 g12 c0 c2 KSG
-XKSG2_0 p11 g11 0 c1 KSG
+XKSG2_0 p11 g11 ALUFN[0] c1 KSG
 
 
-* third layer: 
+* third layer:
+XKSPG3 p2[31:7] g2[31:7] p2[27:3] g2[27:3] p3[31:7] g3[31:7] KSPG
+XKSG3 p2[6:4] g2[6:4] c[2:0] c[6:4] KSG
+XKSG3_0 p23 g23 ALUFN[0] c3 KSG
+
+
+* fourth layer:
+XKSPG4 p3[31:15] g3[31:15] p3[23:7] g3[23:7] p4[31:15] g4[31:15] KSPG
+XKSG4 p3[14:8] g3[14:8] c[6:0] c[14:8] KSG
+XKSG4_0 p37 g37 ALUFN[0] c7 KSG
+
+
+* fifth layer:
+XKSPG5 p431 g431 p423 g423 p531 g531 KSPG
+XKSG5 p4[30:16] g4[30:16] c[14:0] c[30:16] KSG
+XKSG5_0 p47 g47 ALUFN[0] c15 KSG
+
+
+* sixth layer: 
 * not sure if i have to implement this. This is for carry out.
-XKSG3 p23 g23 c0 s4 KSG
+XKSG6_0 p531 g531 ALUFN[0] cout KSG
+
 
 * all the KSS to calculate the sum bits. Last layer.
-Xsum0 p0 0 s0 KSS 
-Xsum123 p[3:1] c[2:0] s[3:1] KSS
+Xsum0 p0 ALUFN[0] s0 KSS 
+Xsum1to31 p[31:1] c[30:0] s[31:1] KSS
 
 .ends
