@@ -123,4 +123,8 @@ Xgo2 phgl gh gout or
 Ay we in loggy territory~
 
 But there's a lot of wires because we need to compute the combined `P` and `G` for each column, not just the final one.\
-These combined `P` and `G` represent the combined value for each set of
+These combined `P` and `G` represent the combined value for each set of columns all the way to the right so they can be used to compute the `Cout` for each column from the original `Cin`.
+
+```haskell
+Cn = G_{n - combined} + P_{n - combined}⋅Cin
+```
