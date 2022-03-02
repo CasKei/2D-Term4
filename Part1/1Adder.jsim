@@ -40,7 +40,7 @@ Xinv c z inverter
 
 * G_i = A_i * B_i
 * P_i = A_i xor B_i
-.subckt PG a b g p
+.subckt KSPG a b g p
 Xp a b p xor
 Xg a b g and
 .ends
@@ -54,12 +54,27 @@ Xgp a b g p PG
 
 
 * this is for KSA, do refer to that diagram from the wikipedia page
-* this one is for the yellow ones
-.subckt CLPG ph gh pl gl pout gout
+* group propagate and generate
+* G = Gi OR (Pi and Giprev)
+* P = Pi AND Piprev
+.subckt KSPG ph gh pl gl pout gout
 Xpo ph pl pout and
 Xgo1 ph gl phgl and
 Xgo2 phgl gh gout or
 .ends
 
 
+* also for KSA, this is group generate, almost same as KSPG,
+* except it is just group generate only.
+* G = Gi OR (Pi and Giprev)
+.subckt KSG ph gh gl gout
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
+.ends
 
+
+* for KSA, finds the sum Si
+* Si = Pi XOR Ciprev
+.subckt KSS ph cl s
+Xs ph cl s xor
+.ends
