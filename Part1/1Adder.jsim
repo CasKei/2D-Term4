@@ -89,32 +89,31 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 
 *Hello, this file should be up to date.
 
-* simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
+* Trying for 32-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
 .subckt adder4 a[3:0] b[3:0] s[4:0]
 
 * all the PGs
 XPG a[3:0] b[3:0] g[3:0] p[3:0] PG
 
-* first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
-* Note - p[2:0][3:0] is the same as saying p23
-XKSPG1a p3 g3 p2 g2 p23 g23 KSPG
-XKSPG1b p2 g2 p1 g1 p12 g12 KSPG
-XKSPG1c p1 g1 p0 g0 p01 g01 KSPG
 
+* first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
+XKSPG1 p[3:1] g[3:1] p[2:0] g[2:0] p1[3:1] g1[3:1] KSPG
 
 * the 0 is because carry in is assumed to be 0
 XKSG1 p0 g0 0 c0 KSG
 
+
 * second layer: bit 3 has KSPG, bits 1 to 2 has KSG
 * Nothing for bit0
-XKSPG2 p23 g23 p01 g01 p03 g03 KSPG
-XKSG2a p12 g12 c0 c2 KSG
-XKSG2b p01 g01 c0 c1 KSG
+XKSPG2 p13 g13 p11 g11 p23 g23 KSPG
+XKSG2 p12 g12 c0 c2 KSG
+XKSG2_0 p11 g11 0 c1 KSG
+
 
 * third layer: 
 * not sure if i have to implement this. This is for carry out.
-XKSG3 p03 g03 c0 s4 KSG
+XKSG3 p23 g23 c0 s4 KSG
 
 * all the KSS to calculate the sum bits. Last layer.
 Xsum0 p0 0 s0 KSS 
