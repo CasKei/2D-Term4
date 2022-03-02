@@ -43,8 +43,7 @@ Xinv c z inverter
 * P_i = A_i xor B_i
 .subckt PG a b g p
 Xp a b p xor
-Xg a b z nand2
-Xinv z g inverter
+Xg a b g and
 .ends
 
 
@@ -60,12 +59,9 @@ Xgp a b g p PG
 * G = Gi OR (Pi and Giprev)
 * P = Pi AND Piprev
 .subckt KSPG ph gh pl gl pout gout
-Xpo ph pl z1 nand2
-Xinv1 z1 pout inverter
-Xgo1 ph gl z2 nand2
-Xinv2 z2 phgl inverter
-Xgo2 phgl gh z3 nor2
-Xinv3 z3 gout inverter
+Xpo ph pl pout and
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
 .ends
 
 
@@ -73,10 +69,8 @@ Xinv3 z3 gout inverter
 * except it is just group generate only.
 * G = Gi OR (Pi and Giprev)
 .subckt KSG ph gh gl gout
-Xgo1 ph gl z1 nand2
-Xinv1 z1 phgl inverter
-Xgo2 phgl gh z2 nor2
-Xinv2 z2 gout inverter
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
 .ends
 
 
@@ -87,13 +81,6 @@ Xs ph cl s xor
 .ends
 
 
-<<<<<<< Updated upstream
-*testing 4 bit connection
-.subckt 4bKSA a[3:0] b[3:0] cin s[3:0] co
-XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
-
-
-=======
 * simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
 .subckt KSA4 a[3:0] b[3:0] s[3:0]
@@ -120,4 +107,3 @@ Xsum0 p0 0 s0 KSS
 Xsum123 p[3:1] c[2:0] s[3:1] KSS
 
 .ends
->>>>>>> Stashed changes
