@@ -43,3 +43,25 @@ Even if you don't know what a column's carry-in will be yet, you could make some
 - **_Kill_**: if both inputs are `0`, carry is sure `0`
 - **_Generated_**: if both inputs are `1`, carry is sure `1`
 - **_Propagated_**: if only one input is `1`, carry out is `1` iff carry in is `1`
+
+For a 1 bit adder: use `G` to represent if it will generate a carry by itself, and `P` if it propagates a carry if the carry in is `1`.
+
+$$
+G=A \cdot B\\
+P = A \oplus B
+$$
+
+So
+
+$$
+C_{out} = G + P \cdot C_{in}
+$$
+
+For the lowest bit, substituting, we get
+
+$$
+C_{out} = A \cdot B + (A \oplus B) \cdot C_{in}
+$$
+
+The second bit onwards is the mad bit.
+It will have `Cout` if
