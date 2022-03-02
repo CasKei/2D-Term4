@@ -28,8 +28,16 @@ X3 m b d nand2
 X4 c d z nand2
 .ends
 
+* faster OR with nor and inv
+.subckt or a b z
+Xnor a b c nor2
+Xinv c z inverter
+.ends
+
 
 * Single carry generate and carry propagate
+* This will be used in the kogge-stone adder (KSA)
+
 * G_i = A_i * B_i
 * P_i = A_i xor B_i
 .subckt PG a b g p
@@ -42,4 +50,13 @@ Xg a b g and
 .subckt CLA1 a b cin g p s
 Xs2 cin p s xor
 Xgp a b g p PG
+.ends
+
+
+* this is for KSA, do refer to that diagram from the wikipedia page
+* this one is for the yellow ones
+.subckt bGP pi gi piprev giprev pout gout
+Xpo pi piprev pout and
+Xgo1 pi giprev pandg and
+Xgo2 pandg gi or
 .ends
