@@ -58,7 +58,7 @@ Xgp a b g p PG
 .subckt CLPG ph gh pl gl pout gout
 Xpo ph pl pout and
 Xgo1 ph gl phgl and
-Xgo2 phgl gh or
+Xgo2 phgl gh gout or
 .ends
 
 
