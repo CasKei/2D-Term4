@@ -1,5 +1,9 @@
 # 2D-50.002
 
+---
+
+# Part1
+
 ## Problem
 
 Ripple carry adders are slow.
@@ -128,3 +132,15 @@ These combined `P` and `G` represent the combined value for each set of columns 
 ```haskell
 Cn = G_{n - combined} + P_{n - combined}⋅Cin
 ```
+
+Sum bit can still be computed with a `XOR` using the original `P` and the carry bit to its right.
+
+```haskell
+Sn = Pn ⊕ C_{n-1}
+```
+
+aight.
+
+---
+
+# Part2
