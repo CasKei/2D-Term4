@@ -59,6 +59,6 @@ $$
 
 ==NOTE== sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
 
-```math
+$$
 S = P \oplus C_{in}
-```
+$$
