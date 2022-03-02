@@ -62,3 +62,7 @@ $$
 $$
 S = P \oplus C_{in}
 $$
+
+ok lets not use latex cos github cant show
+
+![formula](https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1)
