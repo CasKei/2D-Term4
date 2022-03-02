@@ -28,8 +28,6 @@ Xg ginv g inverter
 
 * 1bit CLA
 .subckt CLA1 a b cin g p s
-Xs1 a b p xor2
 Xs2 cin p s xor2
-Xg_inv a b ginv nand2
-Xg ginv g inverter
+Xgp a b g p PG
 .ends
