@@ -57,8 +57,8 @@ $$
 
 > **_Carry propagate_**: $P_i = (A_i + B_i)$ is true if the carry is propagated by FA from $C_{in}$ to $C_{out}$.
 
-NOTE sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
+==NOTE== sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
 
-$$
+```math
 S = P \oplus C_{in}
-$$
+```
