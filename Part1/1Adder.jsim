@@ -96,49 +96,49 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 
 * Trying for 32-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
-.subckt adder32 ALUFN[0] a[31:0] b[31:0] s[31:0] z v n
+.subckt adder32 ALUFN0 a[31:0] b[31:0] s[31:0] z v n
 
 * all the PGs
-Xbuff_ALUFN0 ALUFN[0] bALUFN[0] buffer_8
-XPG a[31:0] b[31:0] bALUFN[0]#32 g0[31:0] p0[31:0] PG
+Xbuff_ALUFN0 ALUFN0 bALUFN0 buffer_8
+XPG a[31:0] b[31:0] bALUFN0#32 g0[31:0] p0[31:0] PG
 
 
 * first layer:
 XKSPG1 p0[31:1] g0[31:1] p0[30:0] g0[30:0] p1[31:1] g1[31:1] KSPG
-XKSG1_0 p00 g00 bALUFN[0] c0 KSG
+XKSG1_0 p00 g00 bALUFN0 c0 KSG
 
 
 * second layer: 
 XKSPG2 p1[31:3] g1[31:3] p1[29:1] g1[29:1] p2[31:3] g2[31:3] KSPG
 XKSG2 p12 g12 c0 c2 KSG
-XKSG2_0 p11 g11 bALUFN[0] c1 KSG
+XKSG2_0 p11 g11 bALUFN0 c1 KSG
 
 
 * third layer:
 XKSPG3 p2[31:7] g2[31:7] p2[27:3] g2[27:3] p3[31:7] g3[31:7] KSPG
 XKSG3 p2[6:4] g2[6:4] c[2:0] c[6:4] KSG
-XKSG3_0 p23 g23 bALUFN[0] c3 KSG
+XKSG3_0 p23 g23 bALUFN0 c3 KSG
 
 
 * fourth layer:
 XKSPG4 p3[31:15] g3[31:15] p3[23:7] g3[23:7] p4[31:15] g4[31:15] KSPG
 XKSG4 p3[14:8] g3[14:8] c[6:0] c[14:8] KSG
-XKSG4_0 p37 g37 bALUFN[0] c7 KSG
+XKSG4_0 p37 g37 bALUFN0 c7 KSG
 
 
 * fifth layer:
 XKSPG5 p431 g431 p423 g423 p531 g531 KSPG
 XKSG5 p4[30:16] g4[30:16] c[14:0] c[30:16] KSG
-XKSG5_0 p415 g415 bALUFN[0] c15 KSG
+XKSG5_0 p415 g415 bALUFN0 c15 KSG
 
 
 * sixth layer: 
 * not sure if i have to implement this. This is for carry out.
-XKSG6_0 p531 g531 bALUFN[0] cout KSG
+XKSG6_0 p531 g531 bALUFN0 cout KSG
 
 
 * all the KSS to calculate the sum bits. Last layer.
-Xsum0 p00 bALUFN[0] s0 KSS 
+Xsum0 p00 bALUFN0 s0 KSS 
 Xsum1to31 p0[31:1] c[30:0] s[31:1] KSS
 
 
@@ -152,7 +152,7 @@ Xorf out1 out0 z nor2
 
 
 *calculate v
-XB_ALUFN0 bALUFN[0] b31 xb31 xor
+XB_ALUFN0 bALUFN0 b31 xb31 xor
 Xnots31 s31 nots31 inverter
 Xnotxb31 xb31 notxb31 inverter
 Xnota31 a31 nota31 inverter
