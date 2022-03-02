@@ -14,6 +14,8 @@ Xc3 b cin co3 nand2
 Xc4 co1 co2 co3 co nand3
 .ends
 
+
+
 * Single carry generate and carry propagate
 * G_i = A_i * B_i --> do this with (nand + inv)
 * P_i = A_i xor B_i
@@ -22,3 +24,5 @@ Xp a b p xor2
 Xg_inv a b ginv nand2
 Xg ginv g inverter
 .ends
+
+
