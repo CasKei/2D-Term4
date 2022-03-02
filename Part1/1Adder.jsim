@@ -87,6 +87,7 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 .ends
 
 
+*Hello, this file should be up to date.
 
 * simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
