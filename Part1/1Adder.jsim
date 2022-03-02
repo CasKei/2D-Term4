@@ -1,6 +1,7 @@
 .include "nominal.jsim"
 .include "stdcell.jsim"
 * .include "2dcheckoff_100ns.jsim"
+.include "lab2checkoff.jsim"
 
 * basic FA
 * S = A xor B xor Cin
