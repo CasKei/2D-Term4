@@ -79,12 +79,46 @@ g = ab = (a nand b) inv \
 p = a xor b
 
 ```
+.subckt and a b z
+Xzinv a b zinv nand2
+Xz zinv z inverter
+.ends
+```
+
+```
+.subckt PG a b g p
+Xp a b p xor2
+Xg a b g and
+.ends
+```
+
+```
 .subckt CLA1 a b cin g p s
-Xs1 a b p xor2
 Xs2 cin p s xor2
-Xg_inv a b ginv nand2
-Xg ginv g inverter
+Xgp a b g p PG
 .ends
 ```
 
 ### 2 bit
+
+We need a Carry logic module CL
+
+Inputs:
+
+- g_lowerorder
+- p_lowerorder
+- cin_lowerorder
+- g_higherorder
+- p_higherorder
+- cin_higherorder
+
+Outputs:
+
+- go
+- po
+- c
+
+```
+.subckt CL gl
+.ends
+```
