@@ -90,7 +90,7 @@ XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 
 * simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
 * assume carry in is 0
-.subckt ksadder a[3:0] b[3:0] s[4:0]
+.subckt adder4 a[3:0] b[3:0] s[4:0]
 
 * all the PGs
 XPG a[3:0] b[3:0] g[3:0] p[3:0] PG
