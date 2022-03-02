@@ -106,6 +106,7 @@ XKSG2 p[1:0][2:1] g[1:0][2:1] c0 c[2:1] KSG
 
 * third layer: 
 * not sure if i have to implement this. This is for carry out.
+XKSG3 p03 g03 c0 s4 KSG
 
 * all the KSS to calculate the sum bits. Last layer.
 Xsum0 p0 0 s0 KSS 
