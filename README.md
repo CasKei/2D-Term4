@@ -64,4 +64,33 @@ C_{out} = A \cdot B + (A \oplus B) \cdot C_{in}
 $$
 
 The second bit onwards is the mad bit.
-It will have `Cout` if
+It will have `Cout=1` if \
+`G=1` OR \
+`P=1` and lowest bit `G=1` OR\
+`P=1` and lowest bit `P=1` and `Cin=1`.
+
+```math
+C0 = G0 + P0⋅Cin
+C1 = G1 + P1⋅G0 + P1⋅P0⋅Cin
+C2 = G2 + P2⋅G1 + P2⋅P1⋅G0 + P2⋅P1⋅P0⋅Cin
+...
+```
+
+## Parallel
+
+The series of `Cout` can go on.\
+If we compute a `G` amd `P` for each column, then we can compute the carry bit for column `N` by making an `OR` gate with `N+2` inputs, each is a `G` and some `P`s, with the last `AND` gate having `N+1` inputs.\
+Can compute each carry bit in 3 gate delays. (2 bit adder)
+
+Sum bit is
+
+```
+S = A ⊕ B ⊕ Cin
+  = P ⊕ Cin
+```
+
+So the sum for any column is just a `XOR` of the `Cin` and the `P` that we already computed for our `Cout`.
+
+## KS
+
+Another
