@@ -2,16 +2,18 @@
 
 ---
 
-# 50.002 Part1
+# 50.002
 
-## Problem
+## 50.002 Part1
+
+### Problem
 
 Ripple carry adders are slow.
 They cascade full adders.
 So for n-bits, we need n full adders.
 To optimise this, there are many possible designs.
 
-## Carry select
+### Carry select
 
 If we split and try to do parallel: say split 32 bit to 2 16bit adders,
 
@@ -32,7 +34,7 @@ Where top 16bits driven by Cout of the bottom 16bits.
 Can split more and form some massive tree to make it `O(log n)`.
 But we can do better.
 
-## G and P
+### G and P
 
 Some geniuses saw something about the carry.\
 Even if you don't know what a column's carry-in will be yet, you could make some assumptions about what will happen:
@@ -80,7 +82,7 @@ C2 = G2 + P2⋅G1 + P2⋅P1⋅G0 + P2⋅P1⋅P0⋅Cin
 ...
 ```
 
-## Parallel
+### Parallel
 
 The series of `Cout` can go on.\
 If we compute a `G` amd `P` for each column, then we can compute the carry bit for column `N` by making an `OR` gate with `N+2` inputs, each is a `G` and some `P`s, with the last `AND` gate having `N+1` inputs.\
@@ -95,7 +97,7 @@ S = A ⊕ B ⊕ Cin
 
 So the sum for any column is just a `XOR` of the `Cin` and the `P` that we already computed for our `Cout`.
 
-## KS
+### KS
 
 Another pair of geniuses found that you can combine `G` and `P` before they are used.
 
@@ -149,16 +151,16 @@ This is 16bit. More layers for 32 bit.
 
 ---
 
-# 50.002 Part2
+## 50.002 Part2
 
 1. Select one output bit `> 8`
 2. From gate netlist, derive the Boolean expression in CNF
 
-## CEC
+### CEC
 
 > Combinational Equivalence Checking: a technique used to chck if 2 combinational circuit designs implement the same Boolean functions.
 
-## SAT
+### SAT
 
 One technique of CEC.
 
@@ -175,3 +177,11 @@ Translation procss from boolean to CNF:
 So we need to make .bc with the boolean eqns.
 
 [.bc doc of-sorts](http://users.ics.aalto.fi/tjunttil/circuits/)
+
+---
+
+# 50.001
+
+---
+
+# 50.004
