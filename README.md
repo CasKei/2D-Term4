@@ -46,20 +46,20 @@ Even if you don't know what a column's carry-in will be yet, you could make some
 
 For a 1 bit adder: use `G` to represent if it will generate a carry by itself, and `P` if it propagates a carry if the carry in is `1`.
 
-```
+```haskell
 G = A⋅B
 P = A ⊕ B
 ```
 
 So
 
-```
+```haskell
 Cout = G + P⋅Cin
 ```
 
 For the lowest bit, substituting, we get
 
-```
+```haskell
 Cout = A⋅B + (A ⊕ B)⋅Cin
 ```
 
@@ -69,7 +69,7 @@ It will have `Cout=1` if \
 `P=1` and lowest bit `G=1` OR\
 `P=1` and lowest bit `P=1` and `Cin=1`.
 
-```math
+```haskell
 C0 = G0 + P0⋅Cin
 C1 = G1 + P1⋅G0 + P1⋅P0⋅Cin
 C2 = G2 + P2⋅G1 + P2⋅P1⋅G0 + P2⋅P1⋅P0⋅Cin
@@ -84,7 +84,7 @@ Can compute each carry bit in 3 gate delays. (2 bit adder)
 
 Sum bit is
 
-```
+```haskell
 S = A ⊕ B ⊕ Cin
   = P ⊕ Cin
 ```
@@ -93,4 +93,34 @@ So the sum for any column is just a `XOR` of the `Cin` and the `P` that we alrea
 
 ## KS
 
-Another
+Another pair of geniuses found that you can combine `G` and `P` before they are used.
+
+If you combine 2 columns, then as a whole they may generate or propagate a carry.\
+If
+
+- left `G` OR
+- left `P` and right `G`
+
+then the combined 2 column unit will have `G` (generate a carry).
+
+The combined unit will `P` if both columns are `P`.
+
+```haskell
+Gunit = G1 + P1⋅G0
+Punit = P1⋅P0
+```
+
+So we have this thing to do this combining operation
+
+```haskell
+.subckt KSPG ph gh pl gl pout gout
+Xpo ph pl pout and
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
+.ends
+```
+
+Ay we in loggy territory~
+
+But there's a lot of wires because we need to compute the combined `P` and `G` for each column, not just the final one.\
+These combined `P` and `G` represent the combined value for each set of
