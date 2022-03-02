@@ -141,6 +141,8 @@ Sn = Pn ⊕ C_{n-1}
 
 aight.
 
+This is 16bit. More layers for 32 bit.
+
 <img src="/Attachments/16-bit_KSA.jpg"
      alt="16bit KS adder"
      style="float: left; margin-right: 10px;" />
