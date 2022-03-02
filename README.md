@@ -46,22 +46,22 @@ Even if you don't know what a column's carry-in will be yet, you could make some
 
 For a 1 bit adder: use `G` to represent if it will generate a carry by itself, and `P` if it propagates a carry if the carry in is `1`.
 
-$$
-G=A \cdot B\\
-P = A \oplus B
-$$
+```
+G = A⋅B
+P = A ⊕ B
+```
 
 So
 
-$$
-C_{out} = G + P \cdot C_{in}
-$$
+```
+Cout = G + P⋅Cin
+```
 
 For the lowest bit, substituting, we get
 
-$$
-C_{out} = A \cdot B + (A \oplus B) \cdot C_{in}
-$$
+```
+Cout = A⋅B + (A ⊕ B)⋅Cin
+```
 
 The second bit onwards is the mad bit.
 It will have `Cout=1` if \
