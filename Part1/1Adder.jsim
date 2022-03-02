@@ -43,7 +43,8 @@ Xinv c z inverter
 * P_i = A_i xor B_i
 .subckt PG a b g p
 Xp a b p xor
-Xg a b g and
+Xg a b z nand2
+Xinv z g inverter
 .ends
 
 
@@ -59,9 +60,12 @@ Xgp a b g p PG
 * G = Gi OR (Pi and Giprev)
 * P = Pi AND Piprev
 .subckt KSPG ph gh pl gl pout gout
-Xpo ph pl pout and
-Xgo1 ph gl phgl and
-Xgo2 phgl gh gout or
+Xpo ph pl z1 nand2
+Xinv1 z1 pout inverter
+Xgo1 ph gl z2 nand2
+Xinv2 z2 phgl inverter
+Xgo2 phgl gh z3 nor2
+Xinv3 z3 gout inverter
 .ends
 
 
@@ -69,8 +73,10 @@ Xgo2 phgl gh gout or
 * except it is just group generate only.
 * G = Gi OR (Pi and Giprev)
 .subckt KSG ph gh gl gout
-Xgo1 ph gl phgl and
-Xgo2 phgl gh gout or
+Xgo1 ph gl z1 nand2
+Xinv1 z1 phgl inverter
+Xgo2 phgl gh z2 nor2
+Xinv2 z2 gout inverter
 .ends
 
 
@@ -79,3 +85,10 @@ Xgo2 phgl gh gout or
 .subckt KSS ph cl s
 Xs ph cl s xor
 .ends
+
+
+*testing 4 bit connection
+.subckt 4bKSA a[3:0] b[3:0] cin s[3:0] co
+XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
+
+
