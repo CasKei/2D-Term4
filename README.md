@@ -165,3 +165,7 @@ Translation procss from boolean to CNF:
 1. Write boolean eqns in terms of 2 input gates
 2. From these eqns, write implications
 3. Replace implications by disjunctions.
+
+So we need to make .bc with the boolean eqns.
+
+[.bc doc of-sorts](http://users.ics.aalto.fi/tjunttil/circuits/)
