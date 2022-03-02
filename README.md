@@ -60,20 +60,16 @@ See $C_{out}$:\
 We choose these 2 signals:
 
 > **_Carry generate_**: $G_i = A_i \cdot B_i$ 1 if carry is 1.\
-> **_Carry propagate_**: $P_i = (A_i + B_i)$ 1 if carry = Cin.
+> **_Carry propagate_**: $P_i = (A_i \oplus B_i)$ 1 if carry = Cin.
 
 If neither is asserted, carry is 0 independently of Cin.
 
 Hence
 $$C_{i+1} = P_i \cdot C_i + G_i$$
 
-NOTE: sometimes $P_{i} = (A_i \oplus B_i)$ to allow us to express $S$ as a simpler function
-
 $$
 S = P \oplus C_{in}
 $$
-
-well github can't show latex but it is viewable in vsc preview so
 
 ### OK lezgo 2bit
 
