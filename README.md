@@ -20,6 +20,8 @@ $$O(\sqrt{n})$$
 
 Where top 16bits driven by Cout of the bottom 16bits.
 
+**Problem**: the carry input to the top 16bits is unknow until the bottom 16bits adder has completed its operation.
+
 ## Carry lookahead
 
 Recall a FA:
@@ -63,6 +65,10 @@ $$
 S = P \oplus C_{in}
 $$
 
-ok lets not use latex cos github cant show
+well github can't show latex but it is viewable in vsc preview so
 
-![formula](https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1)
+### OK lezgo 2bit
+
+$$
+C_{i+1}
+$$
