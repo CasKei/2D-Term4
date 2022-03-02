@@ -87,38 +87,14 @@ Xz zinv z inverter
 
 ```
 .subckt PG a b g p
-Xp a b p xor2
+Xp a b p xor
 Xg a b g and
 .ends
 ```
 
 ```
 .subckt CLA1 a b cin g p s
-Xs2 cin p s xor2
+Xs2 cin p s xor
 Xgp a b g p PG
-.ends
-```
-
-### 2 bit
-
-We need a Carry logic module CL
-
-Inputs:
-
-- g_lowerorder
-- p_lowerorder
-- cin_lowerorder
-- g_higherorder
-- p_higherorder
-- cin_higherorder
-
-Outputs:
-
-- go
-- po
-- c
-
-```
-.subckt CL gl
 .ends
 ```
