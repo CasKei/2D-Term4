@@ -6,8 +6,8 @@
 * S = A xor B xor Cin
 * Co = (A + B)Cin + AB
 .subckt FA a b cin s co
-Xs1 a b s1 xor2
-Xs2 s1 cin s xor2
+Xs1 a b s1 xor
+Xs2 s1 cin s xor
 Xc1 a b co1 nand2
 Xc2 a cin co2 nand2
 Xc3 b cin co3 nand2
@@ -20,18 +20,26 @@ Xzinv a b zinv nand2
 Xz zinv z inverter
 .ends
 
+* faster xor with nands
+.subckt xor a b z
+X1 a b m nand2
+X2 a m c nand2
+X3 m b d nand2
+X4 c d z nand2
+.ends
+
 
 * Single carry generate and carry propagate
 * G_i = A_i * B_i
 * P_i = A_i xor B_i
 .subckt PG a b g p
-Xp a b p xor2
+Xp a b p xor
 Xg a b g and
 .ends
 
 
 * 1bit CLA
 .subckt CLA1 a b cin g p s
-Xs2 cin p s xor2
+Xs2 cin p s xor
 Xgp a b g p PG
 .ends
