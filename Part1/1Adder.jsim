@@ -87,8 +87,37 @@ Xs ph cl s xor
 .ends
 
 
+<<<<<<< Updated upstream
 *testing 4 bit connection
 .subckt 4bKSA a[3:0] b[3:0] cin s[3:0] co
 XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
 
 
+=======
+* simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
+* assume carry in is 0
+.subckt KSA4 a[3:0] b[3:0] s[3:0]
+
+* all the PGs
+XPG a[3:0] b[3:0] g[3:0] p[3:0] PG
+
+* first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
+* Note - p[2:0][3:0] is the same as saying p23
+XKSPG1 p[3:1] g[3:1] p[2:0] g[2:0] p[2:0][3:1] g[2:0][3:1] KSPG
+* the 0 is because carry in is assumed to be 0
+XKSG1 p0 g0 0 c0 KSG
+
+* second layer: bit 3 has KSPG, bits 1 to 2 has KSG
+* Nothing for bit0
+XKSPG2 p23 g23 p01 g01 p03 g03 KSPG
+XKSG2 p[1:0][2:1] g[1:0][2:1] c0 c[2:1] KSG
+
+* third layer: 
+* not sure if i have to implement this. This is for carry out.
+
+* all the KSS to calculate the sum bits. Last layer.
+Xsum0 p0 0 s0 KSS 
+Xsum123 p[3:1] c[2:0] s[3:1] KSS
+
+.ends
+>>>>>>> Stashed changes
