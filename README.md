@@ -25,7 +25,7 @@ Do 2 additions:
 
 Then use MUX to select when the Cin is known
 
-$$O(\sqrt{n})$$
+`O(\sqrt{n})`
 
 Where top 16bits driven by Cout of the bottom 16bits.
 
@@ -144,3 +144,24 @@ aight.
 ---
 
 # Part2
+
+1. Select one output bit `> 8`
+2. From gate netlist, derive the Boolean expression in CNF
+
+## CEC
+
+> Combinational Equivalence Checking: a technique used to chck if 2 combinational circuit designs implement the same Boolean functions.
+
+## SAT
+
+One technique of CEC.
+
+> Given 2 outputs `ya` and `yb` of circuits `A` and `B`,\
+> `ya = yb` if `ya ⊕ yb` is UNSAT.
+
+To use SAT solver, convert circuit netlist into CNF.\
+Translation procss from boolean to CNF:
+
+1. Write boolean eqns in terms of 2 input gates
+2. From these eqns, write implications
+3. Replace implications by disjunctions.
