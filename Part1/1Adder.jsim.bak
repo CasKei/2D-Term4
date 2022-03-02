@@ -1,0 +1,122 @@
+.include "nominal.jsim"
+.include "stdcell.jsim"
+* .include "2dcheckoff_100ns.jsim"
+.include "lab2checkoff.jsim"
+
+* basic FA
+* S = A xor B xor Cin
+* Co = (A + B)Cin + AB
+.subckt FA a b cin s co
+Xs1 a b s1 xor
+Xs2 s1 cin s xor
+Xc1 a b co1 nand2
+Xc2 a cin co2 nand2
+Xc3 b cin co3 nand2
+Xc4 co1 co2 co3 co nand3
+.ends
+
+* make and with nand and inv
+.subckt and a b z
+Xzinv a b zinv nand2
+Xz zinv z inverter
+.ends
+
+* faster xor with nands
+.subckt xor a b z
+X1 a b m nand2
+X2 a m c nand2
+X3 m b d nand2
+X4 c d z nand2
+.ends
+
+* faster OR with nor and inv
+.subckt or a b z
+Xnor a b c nor2
+Xinv c z inverter
+.ends
+
+
+* Single carry generate and carry propagate
+* This will be used in the kogge-stone adder (KSA)
+
+* G_i = A_i * B_i
+* P_i = A_i xor B_i
+.subckt PG a b g p
+Xp a b p xor
+Xg a b g and
+.ends
+
+
+* 1bit CLA
+.subckt CLA1 a b cin g p s
+Xs2 cin p s xor
+Xgp a b g p PG
+.ends
+
+
+* this is for KSA, do refer to that diagram from the wikipedia page
+* group propagate and generate
+* G = Gi OR (Pi and Giprev)
+* P = Pi AND Piprev
+.subckt KSPG ph gh pl gl pout gout
+Xpo ph pl pout and
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
+.ends
+
+
+* also for KSA, this is group generate, almost same as KSPG,
+* except it is just group generate only.
+* G = Gi OR (Pi and Giprev)
+.subckt KSG ph gh gl gout
+Xgo1 ph gl phgl and
+Xgo2 phgl gh gout or
+.ends
+
+
+* for KSA, finds the sum Si
+* Si = Pi XOR Ciprev
+.subckt KSS ph cl s
+Xs ph cl s xor
+.ends
+
+
+*testing 4 bit connection
+.subckt 4bKSA a[3:0] b[3:0] cin s[3:0] co
+XPG0 a[3:0] b[3:0] g0[3:0] p0[3:0] PG
+.ends
+
+
+
+* simple 4-bit KSA (does not take into account the ALUFN0, z, v or n)
+* assume carry in is 0
+.subckt adder4 a[3:0] b[3:0] s[4:0]
+
+* all the PGs
+XPG a[3:0] b[3:0] g[3:0] p[3:0] PG
+
+* first layer: bits 1 to 3 have KSPGs, only bit 0 has KSG
+* Note - p[2:0][3:0] is the same as saying p23
+XKSPG1a p3 g3 p2 g2 p23 g23 KSPG
+XKSPG1b p2 g2 p1 g1 p12 g12 KSPG
+XKSPG1c p1 g1 p0 g0 p01 g01 KSPG
+
+
+* the 0 is because carry in is assumed to be 0
+XKSG1 p0 g0 0 c0 KSG
+
+* second layer: bit 3 has KSPG, bits 1 to 2 has KSG
+* Nothing for bit0
+XKSPG2 p23 g23 p01 g01 p03 g03 KSPG
+XKSG2a p12 g12 c0 c2 KSG
+XKSG2b p01 g01 c0 c1 KSG
+
+* third layer: 
+* not sure if i have to implement this. This is for carry out.
+XKSG3 p03 g03 c0 s4 KSG
+
+* all the KSS to calculate the sum bits. Last layer.
+Xsum0 p0 0 s0 KSS 
+Xsum123 p[3:1] c[2:0] s[3:1] KSS
+
+.ends
