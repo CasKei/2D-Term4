@@ -178,6 +178,11 @@ So we need to make .bc with the boolean eqns.
 
 [.bc doc of-sorts](http://users.ics.aalto.fi/tjunttil/circuits/)
 
+We chose the 8th bit for easier computation.
+A BC file is created from the circuit design, which is then converted into a CNF file by using the telegram submission bot.
+
+The CNF file is fed into `findsolssat.jar` and UNSAT result is true.
+
 ---
 
 # 50.001
