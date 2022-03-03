@@ -99,6 +99,7 @@ public class SATSolver {
             Literal l) {
         ImList<Clause> result = new EmptyImList<Clause>();
         for (Clause c:clauses){
+            // if literal is true, the entire clause can be removed as it is already true
             Clause nclause = c.reduce(l);
             if (nclause != null)
                 result = result.add(nclause);
