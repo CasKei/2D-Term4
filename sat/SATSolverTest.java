@@ -8,6 +8,10 @@ import org.junit.Test;
 
 import sat.env.*;
 import sat.formula.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.io.FileWriter;
 
 
 public class SATSolverTest {
@@ -18,9 +22,52 @@ public class SATSolverTest {
     Literal nb = b.getNegation();
     Literal nc = c.getNegation();
 
-	
+
 	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
+    public static void main(String[] args) {
+        Formula formula = new Formula();
+        try {
+            File cnffile = new File(args[0]);
+            Scanner filereader = new Scanner(cnffile);
+            int numClauses = 0;
+
+            //skip past comment lines and get straight to getting number of clauses
+            while (filereader.hasNextLine()) {
+                String[] temp = filereader.nextLine().split(" ");
+                if (temp[0]=="p" || temp[0]=="P")
+                    numClauses = Integer.parseInt(temp[3]);
+                    break;
+            }
+
+            //create formula from lines of clauses in the file
+            while (formula.getSize()!=numClauses){
+                Clause clause = new Clause();
+                String[] lineclause = filereader.nextLine().split(" ");
+                for (String s:lineclause){
+                    int i = Integer.parseInt(s);
+                    Literal l = PosLiteral.make(Integer.toString(i));
+                    if (i<0)
+                        l = l.getNegation();
+                    clause.add(l);
+                }
+                formula.addClause(clause);
+            }
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("SAT solver starts!!!");
+        long started = System.nanoTime();
+        Environment e = SATSolver.solve(formula);
+        long time = System.nanoTime();
+        long timeTaken= time - started;
+        System.out.println("Time:" + timeTaken/1000000.0 + "ms");
+	    
 	
+
+    }
+
     public void testSATSolver1(){
     	// (a v b)
     	Environment e = SATSolver.solve(makeFm(makeCl(a,b))	);
@@ -38,9 +85,9 @@ public class SATSolverTest {
     	Environment e = SATSolver.solve(makeFm(makeCl(na)));
 /*
     	assertEquals( Bool.FALSE, e.get(na.getVariable()));
-*/    	
+*/
     }
-    
+
     private static Formula makeFm(Clause... e) {
         Formula f = new Formula();
         for (Clause c : e) {
@@ -48,7 +95,7 @@ public class SATSolverTest {
         }
         return f;
     }
-    
+
     private static Clause makeCl(Literal... e) {
         Clause c = new Clause();
         for (Literal l : e) {
