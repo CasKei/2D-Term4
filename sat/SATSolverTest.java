@@ -67,9 +67,21 @@ public class SATSolverTest {
         if (e==null)
             System.out.println("Not Satisfiable");
         else
-            h = e.toString();
-            System.out.println(h);
-            System.out.println("Satisfiable");
+            try{
+                File output = new File("BoolAssignment.txt");
+                FileWriter boolassignment = new FileWriter(output);
+                String temp = e.toString();
+                temp = temp.substring(13,temp.length()-1);
+                String[] envstring = temp.split(", ");
+                for (String s:envstring){
+                    String[] pair = s.split("->");
+                    boolassignment.write(pair[0]+":"+pair[1]+"\n");
+                }
+                boolassignment.close();
+            }
+            catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
     }
 
     public void testSATSolver1(){
