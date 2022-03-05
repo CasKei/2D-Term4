@@ -6,13 +6,16 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 */
 
+import static java.lang.Integer.parseInt;
+
+import immutable.ImMap;
 import sat.env.*;
 import sat.formula.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.io.FileWriter;
-
+import java.io.IOException;
 
 public class SATSolverTest {
     Literal a = PosLiteral.make("a");
@@ -22,50 +25,51 @@ public class SATSolverTest {
     Literal nb = b.getNegation();
     Literal nc = c.getNegation();
 
-
 	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String[] args) {
         Formula formula = new Formula();
         try {
             File cnffile = new File(args[0]);
             Scanner filereader = new Scanner(cnffile);
-            int numClauses = 0;
 
             //skip past comment lines and get straight to getting number of clauses
             while (filereader.hasNextLine()) {
-                String[] temp = filereader.nextLine().split(" ");
-                if (temp[0]=="p" || temp[0]=="P")
-                    numClauses = Integer.parseInt(temp[3]);
-                    break;
-            }
-
-            //create formula from lines of clauses in the file
-            while (formula.getSize()!=numClauses){
-                Clause clause = new Clause();
                 String[] lineclause = filereader.nextLine().split(" ");
-                for (String s:lineclause){
-                    int i = Integer.parseInt(s);
-                    Literal l = PosLiteral.make(Integer.toString(i));
-                    if (i<0)
-                        l = l.getNegation();
-                    clause.add(l);
+                if (lineclause[0].equals("c") || lineclause[0].equals("p") || lineclause[0].isEmpty()) {
+                    continue;
                 }
-                formula.addClause(clause);
+                Clause clause = new Clause();
+                for (String s:lineclause){
+                    if (s.equals("0")) {
+                        break;
+                    }
+                    String[] temp = s.split("-");
+                    Literal l = PosLiteral.make(s);
+                    if (!temp[0].equals(s))
+                        l = l.getNegation();
+                    clause = clause.add(l);
+                }
+                formula = formula.addClause(clause);
             }
+            filereader.close();
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
         System.out.println("SAT solver starts!!!");
         long started = System.nanoTime();
         Environment e = SATSolver.solve(formula);
         long time = System.nanoTime();
         long timeTaken= time - started;
         System.out.println("Time:" + timeTaken/1000000.0 + "ms");
-	    
-	
+        String h = null;
 
+        if (e==null)
+            System.out.println("Not Satisfiable");
+        else
+            h = e.toString();
+            System.out.println(h);
+            System.out.println("Satisfiable");
     }
 
     public void testSATSolver1(){
