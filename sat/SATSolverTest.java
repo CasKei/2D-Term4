@@ -2,7 +2,6 @@ package sat;
 
 /*
 import static org.junit.Assert.*;
-
 import org.junit.Test;
 */
 
@@ -25,7 +24,7 @@ public class SATSolverTest {
     Literal nb = b.getNegation();
     Literal nc = c.getNegation();
 
-	// TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
+    // TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
     public static void main(String[] args) {
         Formula formula = new Formula();
         try {
@@ -41,7 +40,7 @@ public class SATSolverTest {
                 Clause clause = new Clause();
                 for (String s:lineclause){
                     if (s.equals("0")) {
-                        break;
+                        continue;
                     }
                     String[] temp = s.split("-");
                     Literal l = PosLiteral.make(s);
@@ -82,23 +81,24 @@ public class SATSolverTest {
             catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+            System.out.println("Satisfiable");
     }
 
     public void testSATSolver1(){
-    	// (a v b)
-    	Environment e = SATSolver.solve(makeFm(makeCl(a,b))	);
+        // (a v b)
+        Environment e = SATSolver.solve(makeFm(makeCl(a,b))	);
 /*
     	assertTrue( "one of the literals should be set to true",
-    			Bool.TRUE == e.get(a.getVariable())  
+    			Bool.TRUE == e.get(a.getVariable())
     			|| Bool.TRUE == e.get(b.getVariable())	);
-    	
+
 */
     }
 
 
     public void testSATSolver2(){
-    	// (~a)
-    	Environment e = SATSolver.solve(makeFm(makeCl(na)));
+        // (~a)
+        Environment e = SATSolver.solve(makeFm(makeCl(na)));
 /*
     	assertEquals( Bool.FALSE, e.get(na.getVariable()));
 */
