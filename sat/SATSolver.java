@@ -19,7 +19,7 @@ public class SATSolver {
      * unit propagation. The returned environment binds literals of class
      * bool.Variable rather than the special literals used in clausification of
      * class clausal.Literal, so that clients can more readily use it.
-     * 
+     *
      * @return an environment for which the problem evaluates to Bool.TRUE, or
      *         null if no such environment exists.
      */
@@ -32,7 +32,7 @@ public class SATSolver {
     /**
      * Takes a partial assignment of variables to values, and recursively
      * searches for a complete satisfying assignment.
-     * 
+     *
      * @param clauses
      *            formula in conjunctive normal form
      * @param env
@@ -52,9 +52,10 @@ public class SATSolver {
         for (Clause c:clauses.rest()){
             if (c.isEmpty())
                 return null;
-            if (c.size()<num)
+            if (c.size()<num) {
                 num = c.size();
                 smallest = c;
+            }
         }
         Literal l = smallest.chooseLiteral();
         Variable v = l.getVariable();
@@ -67,28 +68,30 @@ public class SATSolver {
                 env = env.putFalse(v);
             // substitute, then recursively call solve
             return solve(substitute(clauses, l), env);
-        }else
+        }else {
             // otherwise, first try setting the literal to true
             if (l instanceof NegLiteral)
                 env = env.putTrue(v);
             // then substitute and solve recursively
-            Environment newEnv = solve(substitute(clauses,l),env);
+            Environment newEnv = solve(substitute(clauses, l), env);
             // if that fails,
             if (newEnv == null) {
                 // try setting literal to false
-                if (l instanceof PosLiteral)
+                if (l instanceof PosLiteral) {
                     l = l.getNegation();
                     env = env.putFalse(v);
+                }
                 // and solve recursively
                 return solve(substitute(clauses, l), env);
-            }else
+            } else
                 return newEnv;
+        }
     }
 
     /**
      * given a clause list and literal, produce a new list resulting from
      * setting that literal to true
-     * 
+     *
      * @param clauses
      *            , a list of clauses
      * @param l
@@ -96,7 +99,7 @@ public class SATSolver {
      * @return a new list of clauses resulting from setting l to true
      */
     private static ImList<Clause> substitute(ImList<Clause> clauses,
-            Literal l) {
+                                             Literal l) {
         ImList<Clause> result = new EmptyImList<Clause>();
         for (Clause c:clauses){
             Clause clause = c.reduce(l);
