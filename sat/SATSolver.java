@@ -44,47 +44,46 @@ public class SATSolver {
     private static Environment solve(ImList<Clause> clauses, Environment env) {
         if (clauses.isEmpty())
             return env;
-        // 1 loop to check a) all clauses valid and b) for the smallest clause by no. of literals
         Clause smallest = clauses.first();
-        if (smallest.isEmpty())
-            return null;
-        int num = smallest.size();
-        for (Clause c:clauses.rest()){
+        for (Clause c:clauses){
+            //first check if valid clause
             if (c.isEmpty())
                 return null;
-            if (c.size()<num) {
-                num = c.size();
+            //if so, obtain size
+            if (c.size()< smallest.size())
                 smallest = c;
-            }
+            //stop when size is 1, which is the smallest possible valid size
+            if (smallest.isUnit())
+                break;
         }
         Literal l = smallest.chooseLiteral();
         Variable v = l.getVariable();
         // if the clause has only 1 literal
         if (smallest.isUnit()) {
             // bind its variable to the environment
-            if (l instanceof PosLiteral)
+            if (l instanceof PosLiteral){
                 env = env.putTrue(v);
-            else
+            }
+            else{
                 env = env.putFalse(v);
+            }
             // substitute, then recursively call solve
             return solve(substitute(clauses, l), env);
-        }else {
+        }
+        else {
             // otherwise, first try setting the literal to true
-            if (l instanceof NegLiteral)
-                env = env.putTrue(v);
+            env = env.putTrue(v);
             // then substitute and solve recursively
             Environment newEnv = solve(substitute(clauses, l), env);
             // if that fails,
             if (newEnv == null) {
                 // try setting literal to false
-                if (l instanceof PosLiteral) {
-                    l = l.getNegation();
-                    env = env.putFalse(v);
-                }
+                env = env.putFalse(v);
                 // and solve recursively
-                return solve(substitute(clauses, l), env);
-            } else
-                return newEnv;
+                return solve(substitute(clauses, l.getNegation()), env);
+            }
+            else{
+                return newEnv;}
         }
     }
 
@@ -100,13 +99,18 @@ public class SATSolver {
      */
     private static ImList<Clause> substitute(ImList<Clause> clauses,
                                              Literal l) {
+        //nothing to substitute
+        if (clauses.isEmpty())
+            return clauses;
+        //create new clause
         ImList<Clause> result = new EmptyImList<Clause>();
         for (Clause c:clauses){
+            //"reduce" the clause
             Clause clause = c.reduce(l);
+            //if clause is still valid, add it to the new clause
             if (clause!=null)
                 result=result.add(clause);
         }
         return result;
     }
-
 }
