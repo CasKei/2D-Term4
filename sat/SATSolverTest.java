@@ -24,7 +24,7 @@ public class SATSolverTest {
     Literal nb = b.getNegation();
     Literal nc = c.getNegation();
 
-    // TODO: add the main method that reads the .cnf file and calls SATSolver.solve to determine the satisfiability
+    //VM option: -Xss128m
     public static void main(String[] args) {
         Formula formula = new Formula();
         try {
@@ -42,15 +42,17 @@ public class SATSolverTest {
                     if (s.equals("0")) {
                         continue;
                     }
-                    String[] temp = s.split("-");
-                    Literal l = PosLiteral.make(s);
-                    if (!temp[0].equals(s))
-                        l = l.getNegation();
-                    clause = clause.add(l);
+                    if (s.charAt(0)=='-')
+                        clause = clause.add(NegLiteral.make(s.substring(1)));
+                    else
+                        clause = clause.add(PosLiteral.make(s));
+                    if (clause==null)
+                        clause=new Clause();
                 }
                 formula = formula.addClause(clause);
             }
             filereader.close();
+            //System.out.println(formula);
         }
         catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -67,6 +69,7 @@ public class SATSolverTest {
             System.out.println("Not Satisfiable");
         else
             try{
+                System.out.println("Satisfiable");
                 File output = new File("BoolAssignment.txt");
                 FileWriter boolassignment = new FileWriter(output);
                 String temp = e.toString();
@@ -81,7 +84,6 @@ public class SATSolverTest {
             catch (IOException ioException) {
                 ioException.printStackTrace();
             }
-            System.out.println("Satisfiable");
     }
 
     public void testSATSolver1(){
@@ -91,7 +93,6 @@ public class SATSolverTest {
     	assertTrue( "one of the literals should be set to true",
     			Bool.TRUE == e.get(a.getVariable())
     			|| Bool.TRUE == e.get(b.getVariable())	);
-
 */
     }
 
@@ -120,4 +121,3 @@ public class SATSolverTest {
         return c;
     }
 
-}
