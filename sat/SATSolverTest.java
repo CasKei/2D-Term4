@@ -30,22 +30,25 @@ public class SATSolverTest {
         try {
             File cnffile = new File(args[0]);
             Scanner filereader = new Scanner(cnffile);
-
-            //skip past comment lines and get straight to getting number of clauses
+            
             while (filereader.hasNextLine()) {
                 String[] lineclause = filereader.nextLine().split(" ");
+                //skip past comments and problem line
                 if (lineclause[0].equals("c") || lineclause[0].equals("p") || lineclause[0].isEmpty()) {
                     continue;
                 }
                 Clause clause = new Clause();
                 for (String s:lineclause){
+                    //0 indicates end of line
                     if (s.equals("0")) {
                         continue;
                     }
+                    //creating negative literal vs positive literal
                     if (s.charAt(0)=='-')
                         clause = clause.add(NegLiteral.make(s.substring(1)));
                     else
                         clause = clause.add(PosLiteral.make(s));
+                    //fix null pointer exception
                     if (clause==null)
                         clause=new Clause();
                 }
@@ -73,6 +76,8 @@ public class SATSolverTest {
                 File output = new File("BoolAssignment.txt");
                 FileWriter boolassignment = new FileWriter(output);
                 String temp = e.toString();
+                //splitting along ", " will cause first entry to have "Environment:[" attached to the front
+                //last entry will also have a "]" attached to the end
                 temp = temp.substring(13,temp.length()-1);
                 String[] envstring = temp.split(", ");
                 for (String s:envstring){
